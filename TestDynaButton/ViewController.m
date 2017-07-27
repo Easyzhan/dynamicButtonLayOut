@@ -26,11 +26,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    aView = [[ActivityTagView alloc] initWithFrame:CGRectMake(0, 0, WINDOW_WIDTH, 200) array:nil];
-//    [self.view addSubview:aView];
     [self tableView];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(noti2:) name:@"noti2" object:nil];
-    
+    aView = [[ActivityTagView alloc] init];
     self.tableView.tableHeaderView = aView;
 }
 
@@ -39,9 +36,7 @@
 {
     NSString *info = [noti object];
     
-    NSLog(@"接收 object传递的消息：%@",info);
     aView.height = info.floatValue;
-//    [self.tableView reloadData];
     self.tableView.tableHeaderView = aView;
 }
 
@@ -77,17 +72,12 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
+    NSArray *ar = [NSArray arrayWithObjects:@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1",@"1", nil];
+
+    aView.arr = ar;
+    [aView setUPView];
+    self.tableView.tableHeaderView = aView;
 }
 
-
--(void)dealloc
-
-{
-    
-    //移除观察者，Observer不能为nil
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-}
 
 @end

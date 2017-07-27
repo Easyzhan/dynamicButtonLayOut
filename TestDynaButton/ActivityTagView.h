@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface ActivityTagView : UIView
-
+@property (nonatomic ,strong)NSArray *arr;
+- (void)setUPView;
 - (instancetype)initWithFrame:(CGRect)frame array:(NSArray *)array;
+
 
 @end

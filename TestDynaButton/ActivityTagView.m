@@ -16,7 +16,7 @@
 
 @interface ActivityTagView()
 @property(nonatomic, strong) UIButton   *tempButton;
-
+@property (nonatomic ,strong)NSMutableArray *views;
 @end
 
 @implementation ActivityTagView
@@ -25,49 +25,68 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
+        _arr = array;
         self.backgroundColor = VDRandomColor;
-        NSInteger countView = 13;//总数
-        NSInteger column = 4;//一行几列
-        NSInteger rowNum = countView/column;//正好oneRowNo一行的行数
-        NSInteger yuShu = countView%column;//余数
-        rowNum = yuShu>0?rowNum+1:rowNum;
-        
-        CGFloat spaceMarginX = 10;//控件间距
-        CGFloat  spaceMarginY = 10;//y方向上的间距
-        CGFloat leftOrRightMargin = 10;//左右距离
-        CGFloat topMargin = 40;//顶部距离
-        CGFloat btW = (WINDOW_WIDTH -2*leftOrRightMargin - (column-1)*spaceMarginX)/column;//控件的(宽=高)
-        CGFloat btH = btW;
-        
-        for (int i = 0; i<rowNum; i++) {
-            NSInteger rowY = i*(btH + spaceMarginY) + topMargin;
-            
-            NSInteger numIndex = column;
-            column = (i == rowNum -1&&yuShu>0)?yuShu:column;
-            for (int j = 0; j<column; j++) {
-                
-                UIButton *buT = [UIButton new];
-                buT.backgroundColor = VDRandomColor;
-                buT.tag = (i*numIndex+j);
-                [buT addTarget:self action:@selector(butClick:) forControlEvents:UIControlEventTouchUpInside];
-                buT.width = btW;
-                buT.height = btH;
-                buT.x = j*(btW + spaceMarginX) + leftOrRightMargin;
-                buT.y = rowY;
-                NSLog(@"----all Y size = %lf",CGRectGetMaxY(buT.frame));
-                _tempButton = buT;
-                
-                [self addSubview:buT];
-            }
-        }
+//        [self setUPView];
     }
     return self;
 }
 
+- (void)setUPView{
+
+    NSInteger countView = _arr.count;//总数
+    NSInteger column = 4;//一行几列
+    NSInteger rowNum = countView/column;//正好oneRowNo一行的行数
+    NSInteger yuShu = countView%column;//余数
+    rowNum = yuShu>0?rowNum+1:rowNum;
+    
+    CGFloat spaceMarginX = 10;//控件间距
+    CGFloat  spaceMarginY = 10;//y方向上的间距
+    CGFloat leftOrRightMargin = 10;//左右距离
+    CGFloat topMargin = 20;//顶部距离
+    CGFloat btW = (WINDOW_WIDTH -2*leftOrRightMargin - (column-1)*spaceMarginX)/column;//控件的(宽=高)
+    CGFloat btH = btW;
+    
+    _views = [NSMutableArray array];
+    for (int i = 0; i<rowNum; i++) {
+        NSInteger rowY = i*(btH + spaceMarginY) + topMargin;
+        
+        NSInteger numIndex = column;
+        column = (i == rowNum -1&&yuShu>0)?yuShu:column;
+        for (int j = 0; j<column; j++) {
+            
+            UIButton *buT = [UIButton new];
+            buT.backgroundColor = VDRandomColor;
+            buT.tag = (i*numIndex+j);
+            [buT addTarget:self action:@selector(butClick:) forControlEvents:UIControlEventTouchUpInside];
+            buT.width = btW;
+            buT.height = btH;
+            buT.x = j*(btW + spaceMarginX) + leftOrRightMargin;
+            buT.y = rowY;
+            NSLog(@"----all Y size = %lf",CGRectGetMaxY(buT.frame));
+            _tempButton = buT;
+            
+            [self addSubview:buT];
+            [_views addObject:buT];
+        }
+    }
+    
+    [self configData];
+}
+
+
+- (void)configData{
+
+    for (int i = 0; i<_arr.count; i++) {
+        
+        UIButton *tempB = _views[i];
+        [tempB setTitle:_arr[i] forState:UIControlStateNormal];
+    }
+    
+    self.height = CGRectGetMaxY(_tempButton.frame) + 20;;
+}
 - (void)layoutSubviews{
 
-    self.height = CGRectGetMaxY(_tempButton.frame) + 20;
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"noti2" object:@(self.height)];
 }
 
 - (void)butClick:(UIButton *)sender{
